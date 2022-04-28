@@ -1,7 +1,7 @@
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
-
-const { ApolloProvider } = require('react-apollo');
+const schema = require('./graphql/schema');
+//const { ApolloProvider } = require('react-apollo');
 
 const app = express();
 
@@ -9,7 +9,8 @@ const app = express();
 app.use(
   '/graphql',
   graphqlHTTP({
-    schema: require('./graphql/schema.js'),
+    schema: schema,
+    graphiql: true,
   })
 );
 

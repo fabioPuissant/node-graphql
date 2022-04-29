@@ -4,7 +4,7 @@ const schema = require('./graphql/schema');
 //const { ApolloProvider } = require('react-apollo');
 const mongoose = require('mongoose');
 const app = express();
-const { connectionStr } = require('./secret/MongoConnectionSecret');
+const { connectionStr } = require('./mongo/secret/MongoConnectionSecret');
 
 mongoose.connect(connectionStr);
 mongoose.connection.once('open', () => console.log('connected to Mongo DB'));

@@ -5,10 +5,11 @@ const schema = require('./graphql/schema');
 const mongoose = require('mongoose');
 const app = express();
 const { connectionStr } = require('./mongo/secret/MongoConnectionSecret');
-
+const cors = require('cors');
 mongoose.connect(connectionStr);
 mongoose.connection.once('open', () => console.log('connected to Mongo DB'));
 //Middleware
+app.use(cors());
 app.use(
   '/graphql',
   graphqlHTTP({

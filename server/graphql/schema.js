@@ -15,6 +15,9 @@ var books = [
   { title: 'Name of the Wind', genre: 'Fantasy', id: '1', authorId: '1' },
   { title: 'The Final Empire', genre: 'Fantasy', id: '2', authorId: '2' },
   { title: 'The Long Earth', genre: 'Sci-Fi', id: '3', authorId: '3' },
+  { title: 'The Hero of Ages', genre: 'Fantasy', id: '4', authorId: '2' },
+  { title: 'The Colour of Magic', genre: 'Fantasy', id: '5', authorId: '3' },
+  { title: 'The Light Fantastic', genre: 'Fantasy', id: '6', authorId: '3' },
 ];
 
 var authors = [
@@ -24,6 +27,8 @@ var authors = [
 ];
 
 // Types
+// for types => fields property must be wrapped into a function since code runs
+//  top-to-down and other referenced types are therefore not defined yet => so wrap in a function!
 const BookType = new GraphQLObjectType({
   name: 'Book',
   fields: () => ({
@@ -45,10 +50,17 @@ const AuthorType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     age: { type: GraphQLInt },
+    books: {
+      type: new GraphQLList(BookType),
+      resolve(parent, args) {
+        return _.filter(books, { authorId: parent.id });
+      },
+    },
   }),
 });
 
 // Queries
+// Here field prop can be an object since all types are compiled and therefore know before hitting this code below!
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
@@ -71,6 +83,12 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return _.find(authors, { id: args.id });
+      },
+    },
+    authors: {
+      type: new GraphQLList(AuthorType),
+      resolve(parant, args) {
+        return authors;
       },
     },
   },
